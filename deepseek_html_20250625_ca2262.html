@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Prompt Veo3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 p-4 md:p-8 flex items-center justify-center font-sans">
+        <div class="bg-white p-4 md:p-8 rounded-xl shadow-2xl w-full max-w-6xl border border-purple-300">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-center text-purple-700 mb-2 uppercase">
+                GENERATOR PROMPT VEO3
+            </h1>
+            <h2 class="text-base md:text-lg font-semibold text-center text-purple-600 mb-6 md:mb-8 pb-2 md:pb-4 border-b-2 border-purple-200 uppercase">
+                AYO KITA BERKREASI DENGAN SANTUY
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8">
+                <!-- Input Section -->
+                <div class="space-y-4 md:space-y-6">
+                    <div class="bg-gray-50 p-4 md:p-6 rounded-lg shadow-inner border border-gray-200">
+                        <label for="indonesian-input" class="block text-lg md:text-xl font-bold text-gray-800 mb-2">
+                            Deskripsi Video Utama (Bahasa Indonesia):
+                        </label>
+                        <textarea
+                            id="indonesian-input"
+                            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition duration-200 resize-y min-h-[120px]"
+                            rows="4"
+                            placeholder="Contoh: Seekor kucing oranye bermain dengan bola benang di ruang tamu yang cerah."
+                        ></textarea>
+                    </div>
+
+                    <!-- DETAIL SUBJEK -->
+                    <div class="bg-purple-50 p-4 md:p-6 rounded-lg shadow-inner border border-purple-200">
+                        <h2 class="text-xl md:text-2xl font-bold text-purple-700 mb-3 md:mb-4 border-b pb-2 border-purple-300">
+                            Detail Subjek (Karakter)
+                        </h2>
+                        <div id="characters-container">
+                            <!-- Character template will be added here -->
+                        </div>
+                        <button
+                            id="add-character-btn"
+                            class="w-full bg-purple-500 text-white py-2 px-4 rounded-lg text-sm hover:bg-purple-600 transition duration-200 mt-4 flex items-center justify-center space-x-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>Tambah Karakter</span>
+                        </button>
+                    </div>
+
+                    <!-- ISI DIALOG KARAKTER -->
+                    <div class="bg-orange-50 p-4 md:p-6 rounded-lg shadow-inner border border-orange-200">
+                        <h2 class="text-xl md:text-2xl font-bold text-orange-700 mb-3 md:mb-4 border-b pb-2 border-orange-300">
+                            Isi Dialog Karakter (Bahasa Indonesia)
+                        </h2>
+                        <div id="dialogues-container">
+                            <p class="text-gray-600">Tambahkan dialog untuk memulai.</p>
+                        </div>
+                        <button
+                            id="add-dialogue-btn"
+                            class="w-full bg-orange-500 text-white py-2 px-4 rounded-lg text-sm hover:bg-orange-600 transition duration-200 mt-4 flex items-center justify-center space-x-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>Tambah Dialog Baru</span>
+                        </button>
+                    </div>
+
+                    <!-- LATAR -->
+                    <div class="bg-yellow-50 p-4 md:p-6 rounded-lg shadow-inner border border-yellow-200">
+                        <h2 class="text-xl md:text-2xl font-bold text-yellow-700 mb-3 md:mb-4 border-b pb-2 border-yellow-300">
+                            Latar Belakang
+                        </h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                            <div>
+                                <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Lokasi:</label>
+                                <select id="location" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Lokasi</option>
+                                    <option value="Kota">Kota</option>
+                                    <option value="Hutan">Hutan</option>
+                                    <option value="Pegunungan">Pegunungan</option>
+                                    <option value="Laut">Laut</option>
+                                    <option value="Ruang Tamu">Ruang Tamu</option>
+                                    <option value="Dapur">Dapur</option>
+                                    <option value="Kantor">Kantor</option>
+                                    <option value="Sekolah">Sekolah</option>
+                                    <option value="Luar Angkasa">Luar Angkasa</option>
+                                    <option value="Kastil Abad Pertengahan">Kastil Abad Pertengahan</option>
+                                    <option value="Gedung Pencakar Langit Modern">Gedung Pencakar Langit Modern</option>
+                                    <option value="Gurun Pasir">Gurun Pasir</option>
+                                    <option value="Pulau Tropis">Pulau Tropis</option>
+                                    <option value="Laboratorium Ilmiah">Laboratorium Ilmiah</option>
+                                    <option value="Galeri Seni">Galeri Seni</option>
+                                    <option value="Stasiun Luar Angkasa">Stasiun Luar Angkasa</option>
+                                    <option value="Bawah Laut">Bawah Laut</option>
+                                    <option value="Planet Asing">Planet Asing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="time" class="block text-sm font-medium text-gray-700 mb-1">Waktu:</label>
+                                <select id="time" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Waktu</option>
+                                    <option value="Pagi">Pagi</option>
+                                    <option value="Siang">Siang</option>
+                                    <option value="Sore">Sore</option>
+                                    <option value="Malam">Malam</option>
+                                    <option value="Tengah Hari">Tengah Hari</option>
+                                    <option value="Senja">Senja</option>
+                                    <option value="Fajar">Fajar</option>
+                                    <option value="Dini Hari">Dini Hari</option>
+                                    <option value="Tengah Malam">Tengah Malam</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="weather" class="block text-sm font-medium text-gray-700 mb-1">Cuaca:</label>
+                                <select id="weather" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Cuaca</option>
+                                    <option value="Cerah">Cerah</option>
+                                    <option value="Mendung">Mendung</option>
+                                    <option value="Hujan">Hujan</option>
+                                    <option value="Bersalju">Bersalju</option>
+                                    <option value="Berangin">Berangin</option>
+                                    <option value="Berkabut">Berkabut</option>
+                                    <option value="Badai Petir">Badai Petir</option>
+                                    <option value="Gerimis">Gerimis</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="season" class="block text-sm font-medium text-gray-700 mb-1">Musim:</label>
+                                <select id="season" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Musim</option>
+                                    <option value="Musim Semi">Musim Semi</option>
+                                    <option value="Musim Panas">Musim Panas</option>
+                                    <option value="Musim Gugur">Musim Gugur</option>
+                                    <option value="Musim Dingin">Musim Dingin</option>
+                                    <option value="Musim Hujan">Musim Hujan</option>
+                                    <option value="Musim Kemarau">Musim Kemarau</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KAMERA -->
+                    <div class="bg-green-50 p-4 md:p-6 rounded-lg shadow-inner border border-green-200">
+                        <h2 class="text-xl md:text-2xl font-bold text-green-700 mb-3 md:mb-4 border-b pb-2 border-green-300">
+                            Pengaturan Kamera
+                        </h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                            <div>
+                                <label for="camera-style" class="block text-sm font-medium text-gray-700 mb-1">Gaya:</label>
+                                <select id="camera-style" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Gaya</option>
+                                    <option value="Sinematik">Sinematik</option>
+                                    <option value="Dokumenter">Dokumenter</option>
+                                    <option value="Gaya DSLR">Gaya DSLR</option>
+                                    <option value="Gaya Telepon Genggam">Gaya Telepon Genggam</option>
+                                    <option value="Gaya Animasi">Gaya Animasi</option>
+                                    <option value="Realistis">Realistis</option>
+                                    <option value="Fantasi">Fantasi</option>
+                                    <option value="Gaya Seni Konseptual">Gaya Seni Konseptual</option>
+                                    <option value="Gaya Film Klasik">Gaya Film Klasik</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="camera-movement" class="block text-sm font-medium text-gray-700 mb-1">Pergerakan Kamera:</label>
+                                <select id="camera-movement" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Pergerakan</option>
+                                    <option value="Pan Kiri ke Kanan">Pan Kiri ke Kanan</option>
+                                    <option value="Pan Kanan ke Kiri">Pan Kanan ke Kiri</option>
+                                    <option value="Tilt Atas ke Bawah">Tilt Atas ke Bawah</option>
+                                    <option value="Tilt Bawah ke Atas">Tilt Bawah ke Atas</option>
+                                    <option value="Zoom In">Zoom In</option>
+                                    <option value="Zoom Out">Zoom Out</option>
+                                    <option value="Dolly In">Dolly In</option>
+                                    <option value="Dolly Out">Dolly Out</option>
+                                    <option value="Orbit">Orbit</option>
+                                    <option value="Static (Diam)">Static (Diam)</option>
+                                    <option value="Gerakan Bebas (Handheld)">Gerakan Bebas (Handheld)</option>
+                                    <option value="Crane Shot">Crane Shot</option>
+                                    <option value="Tracking Shot">Tracking Shot</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="camera-angle" class="block text-sm font-medium text-gray-700 mb-1">Sudut Kamera:</label>
+                                <select id="camera-angle" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Sudut</option>
+                                    <option value="Sudut Mata Burung">Sudut Mata Burung</option>
+                                    <option value="Sudut Rendah">Sudut Rendah</option>
+                                    <option value="Sudut Tinggi">Sudut Tinggi</option>
+                                    <option value="Sudut Mata Normal">Sudut Mata Normal</option>
+                                    <option value="POV (Point of View)">POV (Point of View)</option>
+                                    <option value="Close-up">Close-up</option>
+                                    <option value="Medium Shot">Medium Shot</option>
+                                    <option value="Wide Shot">Wide Shot</option>
+                                    <option value="Extreme Close-up">Extreme Close-up</option>
+                                    <option value="Dutch Angle">Dutch Angle</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="camera-focus" class="block text-sm font-medium text-gray-700 mb-1">Fokus:</label>
+                                <select id="camera-focus" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Fokus</option>
+                                    <option value="Fokus Lembut">Fokus Lembut</option>
+                                    <option value="Fokus Tajam">Fokus Tajam</option>
+                                    <option value="Fokus Dangkal (Bokeh)">Fokus Dangkal (Bokeh)</option>
+                                    <option value="Fokus Dalam">Fokus Dalam</option>
+                                    <option value="Rak Fokus (Rack Focus)">Rak Fokus (Rack Focus)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="lighting" class="block text-sm font-medium text-gray-700 mb-1">Pencahayaan:</label>
+                                <select id="lighting" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Pencahayaan</option>
+                                    <option value="Cahaya Alami">Cahaya Alami</option>
+                                    <option value="Cahaya Keras">Cahaya Keras</option>
+                                    <option value="Cahaya Lembut">Cahaya Lembut</option>
+                                    <option value="Cahaya Remang">Cahaya Remang</option>
+                                    <option value="Cahaya Penuh Warna">Cahaya Penuh Warna</option>
+                                    <option value="Pencahayaan Kontras Tinggi">Pencahayaan Kontras Tinggi</option>
+                                    <option value="Pencahayaan Siluet">Pencahayaan Siluet</option>
+                                    <option value="Pencahayaan Latar (Backlight)">Pencahayaan Latar (Backlight)</option>
+                                    <option value="Pencahayaan Depan (Frontlight)">Pencahayaan Depan (Frontlight)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="color-grading" class="block text-sm font-medium text-gray-700 mb-1">Gradasi Warna:</label>
+                                <select id="color-grading" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Gradasi Warna</option>
+                                    <option value="Hangat (Warm)">Hangat (Warm)</option>
+                                    <option value="Dingin (Cool)">Dingin (Cool)</option>
+                                    <option value="Vibrant">Vibrant</option>
+                                    <option value="Pudar (Muted)">Pudar (Muted)</option>
+                                    <option value="Monokrom (B&W)">Monokrom (B&W)</option>
+                                    <option value="Sepia">Sepia</option>
+                                    <option value="Fantasi">Fantasi</option>
+                                    <option value="Horor">Horor</option>
+                                    <option value="Retro">Retro</option>
+                                    <option value="Modern">Modern</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AUDIO -->
+                    <div class="bg-blue-50 p-4 md:p-6 rounded-lg shadow-inner border border-blue-200">
+                        <h2 class="text-xl md:text-2xl font-bold text-blue-700 mb-3 md:mb-4 border-b pb-2 border-blue-300">
+                            Pengaturan Audio
+                        </h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                            <div>
+                                <label for="dialogue-type" class="block text-sm font-medium text-gray-700 mb-1">Tipe Dialog:</label>
+                                <select id="dialogue-type" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Tipe Dialog</option>
+                                    <option value="Tanpa dialog">Tanpa dialog</option>
+                                    <option value="Informatif">Informatif</option>
+                                    <option value="Natural dialog">Natural dialog</option>
+                                    <option value="Monolog">Monolog</option>
+                                    <option value="Interview">Interview</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="voice-mood" class="block text-sm font-medium text-gray-700 mb-1">Mood Suara:</label>
+                                <select id="voice-mood" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                    <option value="">Pilih Mood</option>
+                                    <option value="Happy">Happy</option>
+                                    <option value="Sad">Sad</option>
+                                    <option value="Cheerful">Cheerful</option>
+                                    <option value="Angry">Angry</option>
+                                    <option value="Calm">Calm</option>
+                                    <option value="Excited">Excited</option>
+                                    <option value="Mysterious">Mysterious</option>
+                                    <option value="Dramatic">Dramatic</option>
+                                    <option value="Fearful">Fearful</option>
+                                    <option value="Surprised">Surprised</option>
+                                    <option value="Content">Content</option>
+                                </select>
+                            </div>
+                            <div class="col-span-1 sm:col-span-2">
+                                <label for="environmental-sound" class="block text-sm font-medium text-gray-700 mb-1">Suara Lingkungan (Contoh: Deru ombak, kicauan burung):</label>
+                                <input type="text" id="environmental-sound" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Suara kota ramai, desiran angin">
+                            </div>
+                            <div class="col-span-1 sm:col-span-2">
+                                <label for="background-music" class="block text-sm font-medium text-gray-700 mb-1">Musik Latar (Contoh: Musik orkestra, musik jazz lembut):</label>
+                                <input type="text" id="background-music" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Musik latar menenangkan, soundtrack epik">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kualitas Video & DETAIL TAMBAHAN -->
+                    <div class="bg-gray-50 p-4 md:p-6 rounded-lg shadow-inner border border-gray-200">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-700 mb-3 md:mb-4 border-b pb-2 border-gray-300">
+                            Kualitas Video & Detail Tambahan
+                        </h2>
+                        <div class="space-y-3 md:space-y-4">
+                            <div>
+                                <label for="video-quality" class="block text-sm font-medium text-gray-700 mb-1">Kualitas Video (Contoh: 4K, HD, Sinematik):</label>
+                                <input type="text" id="video-quality" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Kualitas sinematik tinggi, resolusi 1080p">
+                            </div>
+                            <div>
+                                <label for="additional-details" class="block text-sm font-medium text-gray-700 mb-1">Detail Tambahan (Catatan penting, instruksi khusus):</label>
+                                <textarea id="additional-details" class="w-full p-2 border border-gray-300 rounded-lg resize-y min-h-[80px]" rows="3" placeholder="Contoh: Fokus pada ekspresi wajah karakter, jangan ada unsur kekerasan."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        id="generate-prompt-btn"
+                        class="w-full bg-purple-600 text-white py-3 px-6 rounded-lg text-lg font-bold hover:bg-purple-700 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg mt-6 flex items-center justify-center space-x-2"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 00-7.072 0L5.464 11.464a5 5 0 007.072 7.072l1.9-1.9m.358-5.358l-.058-.058A2 2 0 0113.524 8.24l.058.058a2 2 0 01-.058 2.828zm2.828-2.828l.058-.058a2 2 0 012.828.058l-.058-.058a2 2 0 01-.058-2.828zm.058-2.828l-.058-.058a2 2 0 01.058-2.828l-.058-.058a2 2 0 01-2.828.058l-.058-.058a2 2 0 01-.058 2.828zM14 7l-2-2m-2-2H8l2-2m-2-2H4l2-2" />
+                        </svg>
+                        <span>Hasilkan Prompt Veo3</span>
+                    </button>
+                    <p id="error-message" class="text-red-600 text-center mt-4 font-semibold text-lg hidden"></p>
+                </div>
+
+                <!-- Output Section -->
+                <div class="space-y-4 md:space-y-6">
+                    <div class="bg-white p-4 md:p-6 rounded-lg shadow-xl border border-blue-300">
+                        <label for="indonesian-prompt" class="block text-xl md:text-2xl font-bold text-gray-800 mb-3">
+                            Prompt Veo3 (Bahasa Indonesia):
+                        </label>
+                        <textarea
+                            id="indonesian-prompt"
+                            class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 resize-y min-h-[300px] font-mono text-sm shadow-inner"
+                            rows="15"
+                            readonly
+                        ></textarea>
+                        <button
+                            id="copy-indonesian-btn"
+                            class="mt-4 w-full bg-blue-600 text-white py-3 rounded-lg text-md font-semibold hover:bg-blue-700 transition duration-300 shadow-md"
+                            disabled
+                        >
+                            Salin Prompt Bahasa Indonesia
+                        </button>
+                        <p id="copy-status-indonesian" class="text-green-600 text-sm mt-2 hidden"></p>
+                    </div>
+
+                    <div class="bg-white p-4 md:p-6 rounded-lg shadow-xl border border-purple-300">
+                        <label for="english-prompt" class="block text-xl md:text-2xl font-bold text-gray-800 mb-3">
+                            Veo3 Prompt (English):
+                        </label>
+                        <textarea
+                            id="english-prompt"
+                            class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 resize-y min-h-[300px] font-mono text-sm shadow-inner"
+                            rows="15"
+                            readonly
+                        ></textarea>
+                        <button
+                            id="copy-english-btn"
+                            class="mt-4 w-full bg-purple-600 text-white py-3 rounded-lg text-md font-semibold hover:bg-purple-700 transition duration-300 shadow-md"
+                            disabled
+                        >
+                            Copy English Prompt
+                        </button>
+                        <p id="copy-status-english" class="text-green-600 text-sm mt-2 hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        const state = {
+            characters: [
+                { id: 1, name: '', nationality: '', characteristics: '', mainAction: '', emotion: '', age: '', clothing: '', accessories: '', gender: '' }
+            ],
+            dialogues: [],
+            indonesianInput: '',
+            videoQuality: '',
+            additionalDetails: '',
+            location: '',
+            time: '',
+            weather: '',
+            season: '',
+            cameraStyle: '',
+            cameraMovement: '',
+            cameraAngle: '',
+            cameraFocus: '',
+            lighting: '',
+            colorGrading: '',
+            dialogueType: '',
+            voiceMood: '',
+            environmentalSound: '',
+            backgroundMusic: '',
+            generatedIndonesianPrompt: '',
+            generatedEnglishPrompt: '',
+            isLoading: false,
+            error: '',
+            copyStatusIndonesian: '',
+            copyStatusEnglish: ''
+        };
+
+        // DOM Elements
+        const elements = {
+            charactersContainer: document.getElementById('characters-container'),
+            dialoguesContainer: document.getElementById('dialogues-container'),
+            indonesianInput: document.getElementById('indonesian-input'),
+            videoQuality: document.getElementById('video-quality'),
+            additionalDetails: document.getElementById('additional-details'),
+            location: document.getElementById('location'),
+            time: document.getElementById('time'),
+            weather: document.getElementById('weather'),
+            season: document.getElementById('season'),
+            cameraStyle: document.getElementById('camera-style'),
+            cameraMovement: document.getElementById('camera-movement'),
+            cameraAngle: document.getElementById('camera-angle'),
+            cameraFocus: document.getElementById('camera-focus'),
+            lighting: document.getElementById('lighting'),
+            colorGrading: document.getElementById('color-grading'),
+            dialogueType: document.getElementById('dialogue-type'),
+            voiceMood: document.getElementById('voice-mood'),
+            environmentalSound: document.getElementById('environmental-sound'),
+            backgroundMusic: document.getElementById('background-music'),
+            generatePromptBtn: document.getElementById('generate-prompt-btn'),
+            indonesianPrompt: document.getElementById('indonesian-prompt'),
+            englishPrompt: document.getElementById('english-prompt'),
+            copyIndonesianBtn: document.getElementById('copy-indonesian-btn'),
+            copyEnglishBtn: document.getElementById('copy-english-btn'),
+            copyStatusIndonesian: document.getElementById('copy-status-indonesian'),
+            copyStatusEnglish: document.getElementById('copy-status-english'),
+            errorMessage: document.getElementById('error-message'),
+            addCharacterBtn: document.getElementById('add-character-btn'),
+            addDialogueBtn: document.getElementById('add-dialogue-btn')
+        };
+
+        // Initialize the app
+        function init() {
+            renderCharacters();
+            setupEventListeners();
+        }
+
+        // Render characters
+        function renderCharacters() {
+            elements.charactersContainer.innerHTML = '';
+            
+            if (state.characters.length === 0) {
+                state.characters = [{ id: 1, name: '', nationality: '', characteristics: '', mainAction: '', emotion: '', age: '', clothing: '', accessories: '', gender: '' }];
+            }
+            
+            state.characters.forEach((char, index) => {
+                const characterElement = document.createElement('div');
+                characterElement.className = 'bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4 last:mb-0';
+                characterElement.innerHTML = `
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-semibold text-gray-800">Karakter ${char.name || index + 1}</h3>
+                        ${state.characters.length > 1 ? `
+                            <button
+                                onclick="removeCharacter(${char.id})"
+                                class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition duration-200 text-xs"
+                                title="Hapus Karakter"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="char-${char.id}-name" class="block text-sm font-medium text-gray-700 mb-1">Nama Karakter:</label>
+                            <input type="text" id="char-${char.id}-name" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Budi, Susi" value="${char.name}" onchange="handleCharacterChange(${char.id}, 'name', this.value)" />
+                        </div>
+                        <div>
+                            <label for="char-${char.id}-gender" class="block text-sm font-medium text-gray-700 mb-1">Gender:</label>
+                            <select
+                                id="char-${char.id}-gender"
+                                class="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                                value="${char.gender}"
+                                onchange="handleCharacterChange(${char.id}, 'gender', this.value)"
+                            >
+                                <option value="">Pilih Gender</option>
+                                <option value="Laki-laki" ${char.gender === 'Laki-laki' ? 'selected' : ''}>Laki-laki</option>
+                                <option value="Perempuan" ${char.gender === 'Perempuan' ? 'selected' : ''}>Perempuan</option>
+                                <option value="Lainnya/Tidak disebutkan" ${char.gender === 'Lainnya/Tidak disebutkan' ? 'selected' : ''}>Lainnya/Tidak disebutkan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="char-${char.id}-nationality" class="block text-sm font-medium text-gray-700 mb-1">Kewarganegaraan:</label>
+                            <input type="text" id="char-${char.id}-nationality" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Indonesia, Amerika" value="${char.nationality}" onchange="handleCharacterChange(${char.id}, 'nationality', this.value)" />
+                        </div>
+                        <div>
+                            <label for="char-${char.id}-age" class="block text-sm font-medium text-gray-700 mb-1">Umur:</label>
+                            <input type="text" id="char-${char.id}-age" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: 30, Remaja, Anak-anak" value="${char.age}" onchange="handleCharacterChange(${char.id}, 'age', this.value)" />
+                        </div>
+                        <div>
+                            <label for="char-${char.id}-clothing" class="block text-sm font-medium text-gray-700 mb-1">Pakaian:</label>
+                            <input type="text" id="char-${char.id}-clothing" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Kemeja biru, gaun malam" value="${char.clothing}" onchange="handleCharacterChange(${char.id}, 'clothing', this.value)" />
+                        </div>
+                        <div>
+                            <label for="char-${char.id}-accessories" class="block text-sm font-medium text-gray-700 mb-1">Aksesoris Tambahan:</label>
+                            <input type="text" id="char-${char.id}-accessories" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Topi, kacamata hitam, kalung" value="${char.accessories}" onchange="handleCharacterChange(${char.id}, 'accessories', this.value)" />
+                        </div>
+                        <div>
+                            <label for="char-${char.id}-main-action" class="block text-sm font-medium text-gray-700 mb-1">Aksi Utama:</label>
+                            <input type="text" id="char-${char.id}-main-action" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Berlari, menulis, berbicara" value="${char.mainAction}" onchange="handleCharacterChange(${char.id}, 'mainAction', this.value)" />
+                        </div>
+                        <div>
+                            <label for="char-${char.id}-characteristics" class="block text-sm font-medium text-gray-700 mb-1">Karakteristik Subjek:</label>
+                            <input type="text" id="char-${char.id}-characteristics" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Tinggi, berambut pirang, kacamata" value="${char.characteristics}" onchange="handleCharacterChange(${char.id}, 'characteristics', this.value)" />
+                        </div>
+                        <div>
+                            <label for="char-${char.id}-emotion" class="block text-sm font-medium text-gray-700 mb-1">Emosi:</label>
+                            <input type="text" id="char-${char.id}-emotion" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Contoh: Bahagia, sedih, marah" value="${char.emotion}" onchange="handleCharacterChange(${char.id}, 'emotion', this.value)" />
+                        </div>
+                    </div>
+                `;
+                elements.charactersContainer.appendChild(characterElement);
+            });
+        }
+
+        // Render dialogues
+        function renderDialogues() {
+            elements.dialoguesContainer.innerHTML = '';
+            
+            if (state.dialogues.length === 0) {
+                elements.dialoguesContainer.innerHTML = '<p class="text-gray-600">Tambahkan dialog untuk memulai.</p>';
+                return;
+            }
+            
+            state.dialogues.forEach((dialogue) => {
+                const dialogueElement = document.createElement('div');
+                dialogueElement.className = 'bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4 last:mb-0';
+                dialogueElement.innerHTML = `
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-md font-semibold text-gray-800">Dialog ${dialogue.id}</h3>
+                        <button
+                            onclick="removeDialogue(${dialogue.id})"
+                            class="bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition duration-200 text-xs"
+                            title="Hapus Dialog"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label for="dialogue-speaker-${dialogue.id}" class="block text-sm font-medium text-gray-700 mb-1">Pilih Karakter:</label>
+                            <select
+                                id="dialogue-speaker-${dialogue.id}"
+                                class="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                                value="${dialogue.characterId}"
+                                onchange="handleDialogueChange(${dialogue.id}, 'characterId', parseInt(this.value))"
+                            >
+                                <option value="">Pilih Pembicara</option>
+                                ${state.characters.map(char => `
+                                    <option key="${char.id}" value="${char.id}" ${dialogue.characterId === char.id ? 'selected' : ''}>
+                                        ${char.name || `Karakter ${char.id}`}
+                                    </option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="dialogue-content-${dialogue.id}" class="block text-sm font-medium text-gray-700 mb-1">Isi Dialog:</label>
+                            <textarea
+                                id="dialogue-content-${dialogue.id}"
+                                class="w-full p-2 border border-gray-300 rounded-lg resize-y"
+                                rows="2"
+                                placeholder="Masukkan dialog di sini..."
+                                onchange="handleDialogueChange(${dialogue.id}, 'content', this.value)"
+                            >${dialogue.content || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+                elements.dialoguesContainer.appendChild(dialogueElement);
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Input fields
+            elements.indonesianInput.addEventListener('input', (e) => {
+                state.indonesianInput = e.target.value;
+            });
+            
+            elements.videoQuality.addEventListener('input', (e) => {
+                state.videoQuality = e.target.value;
+            });
+            
+            elements.additionalDetails.addEventListener('input', (e) => {
+                state.additionalDetails = e.target.value;
+            });
+            
+            elements.location.addEventListener('change', (e) => {
+                state.location = e.target.value;
+            });
+            
+            elements.time.addEventListener('change', (e) => {
+                state.time = e.target.value;
+            });
+            
+            elements.weather.addEventListener('change', (e) => {
+                state.weather = e.target.value;
+            });
+            
+            elements.season.addEventListener('change', (e) => {
+                state.season = e.target.value;
+            });
+            
+            elements.cameraStyle.addEventListener('change', (e) => {
+                state.cameraStyle = e.target.value;
+            });
+            
+            elements.cameraMovement.addEventListener('change', (e) => {
+                state.cameraMovement = e.target.value;
+            });
+            
+            elements.cameraAngle.addEventListener('change', (e) => {
+                state.cameraAngle = e.target.value;
+            });
+            
+            elements.cameraFocus.addEventListener('change', (e) => {
+                state.cameraFocus = e.target.value;
+            });
+            
+            elements.lighting.addEventListener('change', (e) => {
+                state.lighting = e.target.value;
+            });
+            
+            elements.colorGrading.addEventListener('change', (e) => {
+                state.colorGrading = e.target.value;
+            });
+            
+            elements.dialogueType.addEventListener('change', (e) => {
+                state.dialogueType = e.target.value;
+            });
+            
+            elements.voiceMood.addEventListener('change', (e) => {
+                state.voiceMood = e.target.value;
+            });
+            
+            elements.environmentalSound.addEventListener('input', (e) => {
+                state.environmentalSound = e.target.value;
+            });
+            
+            elements.backgroundMusic.addEventListener('input', (e) => {
+                state.backgroundMusic = e.target.value;
+            });
+            
+            // Buttons
+            elements.addCharacterBtn.addEventListener('click', addCharacter);
+            elements.addDialogueBtn.addEventListener('click', addDialogue);
+            elements.generatePromptBtn.addEventListener('click', handleGeneratePrompt);
+            elements.copyIndonesianBtn.addEventListener('click', () => handleCopy('indonesian-prompt', 'copy-status-indonesian'));
+            elements.copyEnglishBtn.addEventListener('click', () => handleCopy('english-prompt', 'copy-status-english'));
+        }
+
+        // Character management functions
+        window.addCharacter = function() {
+            const newId = state.characters.length > 0 ? Math.max(...state.characters.map(c => c.id)) + 1 : 1;
+            state.characters.push({
+                id: newId,
+                name: '',
+                nationality: '',
+                characteristics: '',
+                mainAction: '',
+                emotion: '',
+                age: '',
+                clothing: '',
+                accessories: '',
+                gender: ''
+            });
+            renderCharacters();
+        };
+
+        window.removeCharacter = function(id) {
+            state.characters = state.characters.filter(char => char.id !== id);
+            // Also remove any dialogues associated with this character
+            state.dialogues = state.dialogues.filter(dialogue => dialogue.characterId !== id);
+            renderCharacters();
+            renderDialogues();
+        };
+
+        window.handleCharacterChange = function(id, field, value) {
+            state.characters = state.characters.map(char => char.id === id ? { ...char, [field]: value } : char);
+            renderDialogues(); // Update dialogues in case character name changed
+        };
+
+        // Dialogue management functions
+        window.addDialogue = function() {
+            const newId = state.dialogues.length > 0 ? Math.max(...state.dialogues.map(d => d.id)) + 1 : 1;
+            state.dialogues.push({
+                id: newId,
+                characterId: state.characters.length > 0 ? state.characters[0].id : '',
+                content: ''
+            });
+            renderDialogues();
+        };
+
+        window.removeDialogue = function(id) {
+            state.dialogues = state.dialogues.filter(dialogue => dialogue.id !== id);
+            renderDialogues();
+        };
+
+        window.handleDialogueChange = function(id, field, value) {
+            state.dialogues = state.dialogues.map(dialogue => dialogue.id === id ? { ...dialogue, [field]: value } : dialogue);
+        };
+
+        // Function to handle copy action
+        window.handleCopy = function(textAreaId, statusElementId) {
+            const textArea = document.getElementById(textAreaId);
+            const statusElement = document.getElementById(statusElementId);
+            
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                statusElement.textContent = 'Disalin!';
+                statusElement.classList.remove('hidden');
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                statusElement.textContent = 'Gagal menyalin!';
+                statusElement.classList.remove('hidden');
+            } finally {
+                setTimeout(() => {
+                    statusElement.classList.add('hidden');
+                }, 2000);
+            }
+        };
+
+        // Function to construct the Indonesian prompt with placeholders for dialogues
+        function constructIndonesianPrompt() {
+            let sections = [];
+
+            // Main description
+            if (state.indonesianInput) {
+                sections.push(state.indonesianInput.trim());
+            }
+
+            // Characters
+            if (state.characters.length > 0) {
+                let characterDescriptions = [];
+                state.characters.forEach((char) => {
+                    let charDetails = [];
+                    let charLabel = char.name || `Karakter ${char.id}`; // Fallback label
+
+                    if (char.gender && char.gender !== 'Pilih Gender') charDetails.push(`berjenis kelamin ${char.gender}`);
+                    if (char.age) charDetails.push(`berusia ${char.age} tahun`);
+                    if (char.nationality) charDetails.push(`berkebangsaan ${char.nationality}`);
+                    if (char.characteristics) charDetails.push(`dengan karakteristik ${char.characteristics}`);
+                    if (char.clothing) charDetails.push(`mengenakan ${char.clothing}`);
+                    if (char.accessories) charDetails.push(`dilengkapi ${char.accessories}`);
+                    if (char.emotion) charDetails.push(`yang terlihat ${char.emotion}`);
+                    if (char.mainAction) charDetails.push(`melakukan aksi ${char.mainAction}`);
+
+                    if (charDetails.length > 0) {
+                        characterDescriptions.push(`${charLabel} ${charDetails.join(', ')}`);
+                    } else if (char.name) {
+                        characterDescriptions.push(char.name); // If only name is provided
+                    }
+                });
+                if (characterDescriptions.length > 0) {
+                    sections.push(`Karakter utama dalam adegan ini adalah ${characterDescriptions.join('; ')}.`);
+                }
+            }
+
+            // Dialogues - Use placeholders here, but the surrounding text will be integrated
+            if (state.dialogues.length > 0) {
+                let dialogueClauses = [];
+                state.dialogues.forEach((dialogue) => {
+                    const speaker = state.characters.find(char => char.id === dialogue.characterId);
+                    const speakerName = speaker ? (speaker.name || `Karakter ${speaker.id}`) : 'Karakter Tak Dikenal';
+                    if (dialogue.content) {
+                        dialogueClauses.push(`${speakerName} mengucapkan: "{{DIALOGUE_CONTENT_${dialogue.id}}}"`);
+                    }
+                });
+                if (dialogueClauses.length > 0) {
+                    sections.push(`Video ini menampilkan dialog, di mana ${dialogueClauses.join('; ')}.`);
+                }
+            }
+
+            // Background/Setting
+            let settingDetails = [];
+            if (state.location && state.location !== 'Pilih Lokasi') settingDetails.push(state.location);
+            if (state.time && state.time !== 'Pilih Waktu') settingDetails.push(state.time);
+            if (state.weather && state.weather !== 'Pilih Cuaca') settingDetails.push(state.weather);
+            if (state.season && state.season !== 'Pilih Musim') settingDetails.push(`pada musim ${state.season}`);
+
+            if (settingDetails.length > 0) {
+                let settingPhrase = `Latar belakang adegan ini berlokasi di ${settingDetails[0]}`;
+                if (settingDetails.length > 1) {
+                    settingPhrase += `, dengan ${settingDetails.slice(1).join(', ')}`;
+                }
+                sections.push(settingPhrase + '.');
+            }
+
+            // Camera
+            let cameraDetails = [];
+            if (state.cameraStyle && state.cameraStyle !== 'Pilih Gaya') cameraDetails.push(`gaya ${state.cameraStyle}`);
+            if (state.cameraMovement && state.cameraMovement !== 'Pilih Pergerakan') cameraDetails.push(`pergerakan ${state.cameraMovement}`);
+            if (state.cameraAngle && state.cameraAngle !== 'Pilih Sudut') cameraDetails.push(`sudut ${state.cameraAngle}`);
+            if (state.cameraFocus && state.cameraFocus !== 'Pilih Fokus') cameraDetails.push(`fokus ${state.cameraFocus}`);
+            if (state.lighting && state.lighting !== 'Pilih Pencahayaan') cameraDetails.push(`pencahayaan ${state.lighting}`);
+            if (state.colorGrading && state.colorGrading !== 'Pilih Gradasi Warna') cameraDetails.push(`gradasi warna ${state.colorGrading}`);
+
+            if (cameraDetails.length > 0) {
+                sections.push(`Pengaturan kamera mencakup ${cameraDetails.join(', ')}.`);
+            }
+
+            // Audio
+            let audioDetails = [];
+            if (state.dialogueType && state.dialogueType !== 'Pilih Tipe Dialog') audioDetails.push(`tipe dialog: ${state.dialogueType}`);
+            if (state.voiceMood && state.voiceMood !== 'Pilih Mood') audioDetails.push(`mood suara: ${state.voiceMood}`);
+            if (state.environmentalSound) audioDetails.push(`suara lingkungan seperti ${state.environmentalSound}`);
+            if (state.backgroundMusic) audioDetails.push(`musik latar: ${state.backgroundMusic}`);
+
+            if (audioDetails.length > 0) {
+                sections.push(`Komponen audio yang disertakan adalah ${audioDetails.join(', ')}.`);
+            }
+
+            // Video Quality
+            if (state.videoQuality) {
+                sections.push(`Video harus memiliki kualitas ${state.videoQuality}.`);
+            }
+
+            // Additional Details
+            if (state.additionalDetails) {
+                sections.push(`Catatan dan detail tambahan: ${state.additionalDetails}.`);
+            }
+
+            // Join all sections. Ensure proper capitalization for sentence start and a final period.
+            let finalPrompt = sections.map(section => {
+                let cleaned = section.trim();
+                // Ensure section ends with a period if it doesn't already or is not a dialogue placeholder
+                if (!cleaned.endsWith('.') && !cleaned.endsWith('"')) { // Check for ending quote for dialogue
+                    cleaned += '.';
+                }
+                return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+            }).join(' '); // Join with a space for a flowing paragraph
+
+            // Remove any double periods from joining sentences
+            finalPrompt = finalPrompt.replace(/\.\s*\./g, '.');
+            // Ensure final prompt ends with a single period if not already
+            if (finalPrompt.length > 0 && !finalPrompt.endsWith('.') && !finalPrompt.endsWith('"')) {
+                finalPrompt += '.';
+            }
+
+            return finalPrompt;
+        }
+
+        // Function to simulate translation (in a real app, this would call an API)
+        async function translateText(text, targetLang) {
+            // This is a simplified simulation - in a real app, you would call the Gemini API
+            // For this demo, we'll just return the same text with a note
+            return text.replace(/Bahasa Indonesia/g, 'English').replace(/bahasa Indonesia/g, 'English');
+        }
+
+        // Handle prompt generation
+        async function handleGeneratePrompt() {
+            state.isLoading = true;
+            state.error = '';
+            state.copyStatusIndonesian = '';
+            state.copyStatusEnglish = '';
+            
+            // Update UI to show loading state
+            elements.generatePromptBtn.innerHTML = `
+                <span class="flex items-center justify-center">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Menghasilkan...
+                </span>
+            `;
+            elements.generatePromptBtn.disabled = true;
+            elements.errorMessage.classList.add('hidden');
+
+            try {
+                // 1. Construct Indonesian prompt with dialogue placeholders
+                const indonesianPromptWithPlaceholders = constructIndonesianPrompt();
+                state.generatedIndonesianPrompt = indonesianPromptWithPlaceholders;
+                elements.indonesianPrompt.value = state.generatedIndonesianPrompt;
+                elements.copyIndonesianBtn.disabled = false;
+
+                // 2. Translate the main Indonesian prompt (with placeholders) to English
+                let englishPromptTranslated = await translateText(indonesianPromptWithPlaceholders, 'Inggris');
+
+                // 3. Replace dialogue placeholders in the English prompt with original Indonesian dialogue content
+                for (const dialogue of state.dialogues) {
+                    if (dialogue.content) {
+                        const placeholder = `{{DIALOGUE_CONTENT_${dialogue.id}}}`;
+                        // Direct replacement with original Indonesian content for English prompt
+                        englishPromptTranslated = englishPromptTranslated.replace(placeholder, dialogue.content);
+                    }
+                }
+
+                // Clean up any remaining placeholders in case some dialogues were empty or not handled
+                englishPromptTranslated = englishPromptTranslated.replace(/\{\{DIALOGUE_CONTENT_\d+\}\}/g, '');
+
+                state.generatedEnglishPrompt = englishPromptTranslated;
+                elements.englishPrompt.value = state.generatedEnglishPrompt;
+                elements.copyEnglishBtn.disabled = false;
+            } catch (err) {
+                console.error("Error generating prompt:", err);
+                state.error = "Terjadi kesalahan saat menghasilkan prompt. Silakan coba lagi.";
+                elements.errorMessage.textContent = state.error;
+                elements.errorMessage.classList.remove('hidden');
+            } finally {
+                state.isLoading = false;
+                // Reset generate button
+                elements.generatePromptBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 00-7.072 0L5.464 11.464a5 5 0 007.072 7.072l1.9-1.9m.358-5.358l-.058-.058A2 2 0 0113.524 8.24l.058.058a2 2 0 01-.058 2.828zm2.828-2.828l.058-.058a2 2 0 012.828.058l-.058-.058a2 2 0 01-.058-2.828zm.058-2.828l-.058-.058a2 2 0 01.058-2.828l-.058-.058a2 2 0 01-2.828.058l-.058-.058a2 2 0 01-.058 2.828zM14 7l-2-2m-2-2H8l2-2m-2-2H4l2-2" />
+                    </svg>
+                    <span>Hasilkan Prompt Veo3</span>
+                `;
+                elements.generatePromptBtn.disabled = false;
+            }
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
